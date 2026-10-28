@@ -19,6 +19,6 @@ https://github.com/seuquay56/SmartTicketingSystem_TVM.git
 
 4. Member Contribution Breakdown:
 1. 524H0057 - On Gia Khiem: 30%
-2. MSSV - Vo Nguyen Phuc Thinh: 40%
-3. MSSV - Nguyen Tran Nhat Huy: 30%
+2. 524H0069 - Vo Nguyen Phuc Thinh: 40%
+3. 524H0052 - Nguyen Nhat Huy: 30%
 Total: 100%
