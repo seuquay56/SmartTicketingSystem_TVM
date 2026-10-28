@@ -1,4 +1,3 @@
-
 SMART TICKETING SYSTEM - TICKET VENDOR MACHINE (TVM)
 Software Engineering Lab - Group Assignment 1
 
