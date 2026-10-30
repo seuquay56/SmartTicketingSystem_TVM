@@ -13,7 +13,7 @@ namespace SmartTicketing.UI
         {
             Directory.CreateDirectory(outputDir);
             var form = new MainForm();
-            form.Size = new Size(1100, 800);
+            form.ClientSize = new Size(1140, 740);
             form.Show();
 
             var pnlHdr = (Panel)typeof(MainForm).GetField("_pnlHeader", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.GetValue(form)!;
@@ -28,8 +28,8 @@ namespace SmartTicketing.UI
                 Application.DoEvents();
                 System.Threading.Thread.Sleep(150);
 
-                int w = 1100;
-                int h = 800;
+                int w = 1140;
+                int h = 740;
                 using var fullBmp = new Bitmap(w, h);
                 using (var g = Graphics.FromImage(fullBmp))
                 {

@@ -106,8 +106,11 @@ namespace SmartTicketing.UI
         private void InitializeComponentCustom()
         {
             this.Text = "Smart Ticketing System - MetroLink TVM Kiosk (Visual Programming C# & MSSQL)";
-            this.Size = new Size(1100, 800);
-            this.MinimumSize = new Size(1000, 750);
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = true;
+            this.ClientSize = new Size(1140, 740);
+            this.AutoScaleMode = AutoScaleMode.None;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = UITheme.LightBg;
             this.Font = new Font("Segoe UI", 10, FontStyle.Regular);
@@ -121,7 +124,7 @@ namespace SmartTicketing.UI
             {
                 Dock = DockStyle.Fill,
                 BackColor = UITheme.LightBg,
-                Padding = new Padding(25, 10, 25, 10)
+                Padding = new Padding(0)
             };
             this.Controls.Add(_pnlContent);
 
@@ -194,26 +197,16 @@ namespace SmartTicketing.UI
             };
             pnl.Controls.Add(lblStation);
 
-            // Top right utility pills
-            var lblLang = new Label
+            // Top right utility pills in right-docked flow panel
+            var pnlRightUtils = new FlowLayoutPanel
             {
-                Text = "🌐 English",
-                Font = new Font("Segoe UI", 9, FontStyle.Regular),
-                ForeColor = Color.White,
-                AutoSize = true,
-                Location = new Point(850, 20),
+                Dock = DockStyle.Right,
+                Width = 260,
+                Height = 60,
+                FlowDirection = FlowDirection.RightToLeft,
+                Padding = new Padding(0, 18, 25, 0),
+                BackColor = Color.Transparent
             };
-            pnl.Controls.Add(lblLang);
-
-            var lblAudio = new Label
-            {
-                Text = "🔊 Audio",
-                Font = new Font("Segoe UI", 9, FontStyle.Regular),
-                ForeColor = Color.White,
-                AutoSize = true,
-                Location = new Point(930, 20),
-            };
-            pnl.Controls.Add(lblAudio);
 
             var lblHelp = new Label
             {
@@ -221,9 +214,34 @@ namespace SmartTicketing.UI
                 Font = new Font("Segoe UI", 9, FontStyle.Regular),
                 ForeColor = Color.White,
                 AutoSize = true,
-                Location = new Point(1010, 20),
+                Margin = new Padding(12, 0, 0, 0),
+                Cursor = Cursors.Hand
             };
-            pnl.Controls.Add(lblHelp);
+            pnlRightUtils.Controls.Add(lblHelp);
+
+            var lblAudio = new Label
+            {
+                Text = "🔊 Audio",
+                Font = new Font("Segoe UI", 9, FontStyle.Regular),
+                ForeColor = Color.White,
+                AutoSize = true,
+                Margin = new Padding(12, 0, 0, 0),
+                Cursor = Cursors.Hand
+            };
+            pnlRightUtils.Controls.Add(lblAudio);
+
+            var lblLang = new Label
+            {
+                Text = "🌐 English",
+                Font = new Font("Segoe UI", 9, FontStyle.Regular),
+                ForeColor = Color.White,
+                AutoSize = true,
+                Margin = new Padding(12, 0, 0, 0),
+                Cursor = Cursors.Hand
+            };
+            pnlRightUtils.Controls.Add(lblLang);
+
+            pnl.Controls.Add(pnlRightUtils);
 
             return pnl;
         }
@@ -409,16 +427,23 @@ namespace SmartTicketing.UI
             };
             pnl.Controls.Add(btnSimJam);
 
-            // DB Status
+            // DB Status docked right
+            var pnlDbStatus = new Panel
+            {
+                Dock = DockStyle.Right,
+                Width = 350,
+                BackColor = Color.Transparent
+            };
             _lblDbStatus = new Label
             {
                 Text = "● Checking Database...",
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
                 ForeColor = UITheme.SuccessGreen,
                 AutoSize = true,
-                Location = new Point(720, 14),
+                Location = new Point(15, 14),
             };
-            pnl.Controls.Add(_lblDbStatus);
+            pnlDbStatus.Controls.Add(_lblDbStatus);
+            pnl.Controls.Add(pnlDbStatus);
 
             return pnl;
         }
@@ -568,16 +593,20 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(lblNote);
 
             // Right Side: Transit Line Map
-            var pnlRouteMap = CreateRouteMapCard(640, 30, 400, 480, selectedStationName: "");
+            var pnlRouteMap = CreateRouteMapCard(720, 20, 380, 485, selectedStationName: "");
             pnl.Controls.Add(pnlRouteMap);
+
+            var btnCancelS01 = CreateCancelButton();
+            btnCancelS01.Location = new Point(35, 525);
+            pnl.Controls.Add(btnCancelS01);
 
             // Bottom CTA Button
             var btnStart = new Button
             {
                 Text = "→  Start · Buy tickets",
                 Font = new Font("Segoe UI", 13, FontStyle.Bold),
-                Size = new Size(240, 56),
-                Location = new Point(760, 520),
+                Size = new Size(380, 52),
+                Location = new Point(720, 520),
                 BackColor = UITheme.PrimaryBlue,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -666,7 +695,7 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(lblSummary);
 
             // Right Side Route Map Card
-            var pnlMap = CreateRouteMapCard(640, 20, 400, 480, chosen?.StationName ?? "Riverside");
+            var pnlMap = CreateRouteMapCard(720, 20, 380, 485, chosen?.StationName ?? "Riverside");
             pnl.Controls.Add(pnlMap);
 
             // Bottom Buttons
@@ -682,8 +711,8 @@ namespace SmartTicketing.UI
             {
                 Text = "→  Continue to tickets",
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                Size = new Size(220, 52),
-                Location = new Point(760, 520),
+                Size = new Size(380, 52),
+                Location = new Point(720, 520),
                 BackColor = UITheme.PrimaryBlue,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -825,7 +854,7 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(lblCounterNote);
 
             // Right Panel: Order Summary
-            var pnlSummary = CreateOrderSummaryCard(680, 20, 350, 460);
+            var pnlSummary = CreateOrderSummaryCard(720, 20, 380, 485);
             pnl.Controls.Add(pnlSummary);
 
             // Bottom Buttons
@@ -841,8 +870,8 @@ namespace SmartTicketing.UI
             {
                 Text = $"→  Continue · ${_controller.TotalAmount:F2}",
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                Size = new Size(240, 52),
-                Location = new Point(760, 520),
+                Size = new Size(380, 52),
+                Location = new Point(720, 520),
                 BackColor = UITheme.PrimaryBlue,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -921,7 +950,7 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(pnlSecurity);
 
             // Right Order Summary
-            var pnlSummary = CreateOrderSummaryCard(680, 20, 350, 460);
+            var pnlSummary = CreateOrderSummaryCard(720, 20, 380, 485);
             pnl.Controls.Add(pnlSummary);
 
             // Bottom Buttons
@@ -985,7 +1014,7 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(pnlPriv);
 
             // Right Order Summary
-            var pnlSummary = CreateOrderSummaryCard(680, 20, 350, 460);
+            var pnlSummary = CreateOrderSummaryCard(720, 20, 380, 485);
             pnl.Controls.Add(pnlSummary);
 
             // Bottom Buttons
@@ -1086,7 +1115,7 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(pnlQrCard);
 
             // Right Summary
-            var pnlSummary = CreateOrderSummaryCard(680, 20, 350, 460);
+            var pnlSummary = CreateOrderSummaryCard(720, 20, 380, 485);
             pnl.Controls.Add(pnlSummary);
 
             // Bottom Buttons
@@ -1138,17 +1167,32 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(pnlAlert);
 
             // Right Summary
-            var pnlSummary = CreateOrderSummaryCard(680, 20, 350, 460);
+            var pnlSummary = CreateOrderSummaryCard(720, 20, 380, 485);
             pnl.Controls.Add(pnlSummary);
 
             // Bottom Buttons
             var btnBack = CreateBackButton(() => _controller.SetState(TVMState.SelectingPayment));
-            btnBack.Location = new Point(30, 520);
+            btnBack.Location = new Point(35, 525);
             pnl.Controls.Add(btnBack);
 
             var btnCancel = CreateCancelButton();
-            btnCancel.Location = new Point(160, 525);
+            btnCancel.Location = new Point(145, 525);
             pnl.Controls.Add(btnCancel);
+
+            var btnChooseAnother = new Button
+            {
+                Text = "→  Choose another method",
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                Size = new Size(380, 52),
+                Location = new Point(720, 520),
+                BackColor = UITheme.PrimaryBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnChooseAnother.FlatAppearance.BorderSize = 0;
+            btnChooseAnother.Click += (s, e) => _controller.SetState(TVMState.SelectingPayment);
+            pnl.Controls.Add(btnChooseAnother);
 
             return pnl;
         }
@@ -1189,17 +1233,32 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(pnlAlert);
 
             // Right Summary
-            var pnlSummary = CreateOrderSummaryCard(680, 20, 350, 460);
+            var pnlSummary = CreateOrderSummaryCard(720, 20, 380, 485);
             pnl.Controls.Add(pnlSummary);
 
             // Bottom Buttons
             var btnBack = CreateBackButton(() => _controller.SetState(TVMState.SelectingPayment));
-            btnBack.Location = new Point(30, 520);
+            btnBack.Location = new Point(35, 525);
             pnl.Controls.Add(btnBack);
 
             var btnCancel = CreateCancelButton();
-            btnCancel.Location = new Point(160, 525);
+            btnCancel.Location = new Point(145, 525);
             pnl.Controls.Add(btnCancel);
+
+            var btnRegenQR = new Button
+            {
+                Text = "→  Create a new QR code",
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                Size = new Size(380, 52),
+                Location = new Point(720, 520),
+                BackColor = UITheme.PrimaryBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnRegenQR.FlatAppearance.BorderSize = 0;
+            btnRegenQR.Click += (s, e) => _controller.SetState(TVMState.ProcessingQRPayment);
+            pnl.Controls.Add(btnRegenQR);
 
             return pnl;
         }
@@ -1261,7 +1320,7 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(pnlPrintCard);
 
             // Right Summary
-            var pnlSummary = CreateOrderSummaryCard(680, 20, 350, 460);
+            var pnlSummary = CreateOrderSummaryCard(720, 20, 380, 485);
             pnl.Controls.Add(pnlSummary);
 
             return pnl;
@@ -1328,7 +1387,7 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(pnlTicketCard);
 
             // Right Summary
-            var pnlSummary = CreateOrderSummaryCard(680, 20, 350, 460);
+            var pnlSummary = CreateOrderSummaryCard(720, 20, 380, 485);
             pnl.Controls.Add(pnlSummary);
 
             // Finish Button
@@ -1336,8 +1395,8 @@ namespace SmartTicketing.UI
             {
                 Text = "✔  Finish · Return to start",
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                Size = new Size(240, 52),
-                Location = new Point(760, 520),
+                Size = new Size(380, 52),
+                Location = new Point(720, 520),
                 BackColor = UITheme.PrimaryBlue,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -1388,7 +1447,7 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(pnlFaultCard);
 
             // Right Summary
-            var pnlSummary = CreateOrderSummaryCard(680, 20, 350, 460);
+            var pnlSummary = CreateOrderSummaryCard(720, 20, 380, 485);
             pnl.Controls.Add(pnlSummary);
 
             return pnl;
