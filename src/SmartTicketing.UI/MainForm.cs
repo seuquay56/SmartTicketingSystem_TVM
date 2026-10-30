@@ -211,13 +211,22 @@ namespace SmartTicketing.UI
             };
             pnl.Controls.Add(lblBrand);
 
+            var pbStationPin = new PictureBox
+            {
+                Image = BootstrapIcons.GeoAltFill(14, UITheme.LineBlue),
+                Size = new Size(14, 14),
+                Location = new Point(190, 24),
+                SizeMode = PictureBoxSizeMode.CenterImage
+            };
+            pnl.Controls.Add(pbStationPin);
+
             var lblStation = new Label
             {
-                Text = "📍 Central Station",
+                Text = "Central Station",
                 Font = new Font("Segoe UI", 10, FontStyle.Regular),
                 ForeColor = UITheme.TextMuted,
                 AutoSize = true,
-                Location = new Point(190, 20)
+                Location = new Point(208, 20)
             };
             pnl.Controls.Add(lblStation);
 
@@ -232,38 +241,9 @@ namespace SmartTicketing.UI
                 BackColor = Color.Transparent
             };
 
-            var lblHelp = new Label
-            {
-                Text = "❓ Help",
-                Font = new Font("Segoe UI", 9, FontStyle.Regular),
-                ForeColor = Color.White,
-                AutoSize = true,
-                Margin = new Padding(12, 0, 0, 0),
-                Cursor = Cursors.Hand
-            };
-            pnlRightUtils.Controls.Add(lblHelp);
-
-            var lblAudio = new Label
-            {
-                Text = "🔊 Audio",
-                Font = new Font("Segoe UI", 9, FontStyle.Regular),
-                ForeColor = Color.White,
-                AutoSize = true,
-                Margin = new Padding(12, 0, 0, 0),
-                Cursor = Cursors.Hand
-            };
-            pnlRightUtils.Controls.Add(lblAudio);
-
-            var lblLang = new Label
-            {
-                Text = "🌐 English",
-                Font = new Font("Segoe UI", 9, FontStyle.Regular),
-                ForeColor = Color.White,
-                AutoSize = true,
-                Margin = new Padding(12, 0, 0, 0),
-                Cursor = Cursors.Hand
-            };
-            pnlRightUtils.Controls.Add(lblLang);
+            pnlRightUtils.Controls.Add(CreateHeaderPill("Help", BootstrapIcons.QuestionCircle(14, Color.White)));
+            pnlRightUtils.Controls.Add(CreateHeaderPill("Audio", BootstrapIcons.VolumeUp(14, Color.White)));
+            pnlRightUtils.Controls.Add(CreateHeaderPill("English", BootstrapIcons.Globe(14, Color.White)));
 
             pnl.Controls.Add(pnlRightUtils);
 
@@ -579,24 +559,71 @@ namespace SmartTicketing.UI
             };
             pnl.Controls.Add(lblPopHeading);
 
-            // Popular Quick Pick Cards
+            // Popular Quick Pick Cards with Bootstrap Icons
             string[] populars = { "Market Street", "Riverside", "Harbour" };
             for (int i = 0; i < populars.Length; i++)
             {
                 string destName = populars[i];
                 var btnPop = new Button
                 {
-                    Text = $"📍  {destName}                                →",
-                    Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                    TextAlign = ContentAlignment.MiddleLeft,
-                    Size = new Size(380, 52),
-                    Location = new Point(30, 225 + (i * 62)),
+                    Size = new Size(440, 56),
+                    Location = new Point(30, 225 + (i * 66)),
                     BackColor = Color.White,
                     FlatStyle = FlatStyle.Flat,
-                    ForeColor = UITheme.TextPrimary,
-                    Cursor = Cursors.Hand
+                    Cursor = Cursors.Hand,
+                    Text = ""
                 };
                 btnPop.FlatAppearance.BorderColor = UITheme.BorderColor;
+
+                var pbPin = new PictureBox
+                {
+                    Image = BootstrapIcons.GeoAltFill(18, UITheme.NavyDark),
+                    Size = new Size(18, 18),
+                    Location = new Point(16, 19),
+                    SizeMode = PictureBoxSizeMode.CenterImage
+                };
+                var lblDest = new Label
+                {
+                    Text = destName,
+                    Font = new Font("Segoe UI", 11.5f, FontStyle.Bold),
+                    ForeColor = UITheme.NavyDark,
+                    Location = new Point(44, 16),
+                    AutoSize = true
+                };
+
+                var pbArrow = new PictureBox
+                {
+                    Image = BootstrapIcons.ArrowRight(18, UITheme.TextSecondary),
+                    Size = new Size(18, 18),
+                    Location = new Point(400, 19),
+                    SizeMode = PictureBoxSizeMode.CenterImage
+                };
+
+                btnPop.Controls.Add(pbPin);
+                btnPop.Controls.Add(lblDest);
+
+                if (destName == "Riverside")
+                {
+                    var lblPopBadge = new Label
+                    {
+                        Text = "POPULAR",
+                        Font = new Font("Segoe UI", 7.5f, FontStyle.Bold),
+                        ForeColor = Color.White,
+                        BackColor = UITheme.PrimaryBlue,
+                        Size = new Size(68, 20),
+                        Location = new Point(160, 18),
+                        TextAlign = ContentAlignment.MiddleCenter
+                    };
+                    btnPop.Controls.Add(lblPopBadge);
+                    lblPopBadge.Click += (s, e) => btnPop.PerformClick();
+                }
+
+                btnPop.Controls.Add(pbArrow);
+
+                pbPin.Click += (s, e) => btnPop.PerformClick();
+                lblDest.Click += (s, e) => btnPop.PerformClick();
+                pbArrow.Click += (s, e) => btnPop.PerformClick();
+
                 btnPop.Click += (s, e) =>
                 {
                     var dest = _stations.Find(st => st.StationName == destName) ?? new Station { StationName = destName, BaseFare = 3.00m };
@@ -685,17 +712,75 @@ namespace SmartTicketing.UI
                 bool isSelected = (chosen != null && chosen.StationName == st.StationName);
                 var btnStation = new Button
                 {
-                    Text = $"  ○  {st.StationName,-20}               ${st.BaseFare:F2}",
-                    Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                    Size = new Size(380, 48),
+                    Size = new Size(440, 50),
                     Location = new Point(30, yPos),
                     BackColor = isSelected ? UITheme.PrimaryBlue : Color.White,
                     ForeColor = isSelected ? Color.White : UITheme.TextPrimary,
                     FlatStyle = FlatStyle.Flat,
-                    TextAlign = ContentAlignment.MiddleLeft,
-                    Cursor = Cursors.Hand
+                    Cursor = Cursors.Hand,
+                    Text = ""
                 };
                 btnStation.FlatAppearance.BorderColor = isSelected ? UITheme.PrimaryBlue : UITheme.BorderColor;
+
+                var pbPin = new PictureBox
+                {
+                    Image = BootstrapIcons.GeoAltFill(16, isSelected ? Color.White : UITheme.NavyDark),
+                    Size = new Size(16, 16),
+                    Location = new Point(16, 17),
+                    SizeMode = PictureBoxSizeMode.CenterImage
+                };
+                var lblName = new Label
+                {
+                    Text = st.StationName,
+                    Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                    ForeColor = isSelected ? Color.White : UITheme.TextPrimary,
+                    Location = new Point(42, 14),
+                    AutoSize = true
+                };
+
+                var lblFare = new Label
+                {
+                    Text = $"${st.BaseFare:F2}",
+                    Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                    ForeColor = isSelected ? Color.White : UITheme.TextSecondary,
+                    Location = new Point(330, 14),
+                    AutoSize = true
+                };
+
+                var pbArrow = new PictureBox
+                {
+                    Image = BootstrapIcons.ArrowRight(16, isSelected ? Color.White : UITheme.TextMuted),
+                    Size = new Size(16, 16),
+                    Location = new Point(400, 17),
+                    SizeMode = PictureBoxSizeMode.CenterImage
+                };
+
+                btnStation.Controls.Add(pbPin);
+                btnStation.Controls.Add(lblName);
+
+                if (st.StationName == "Riverside")
+                {
+                    var lblBadge = new Label
+                    {
+                        Text = isSelected ? "SELECTED" : "POPULAR",
+                        Font = new Font("Segoe UI", 7.5f, FontStyle.Bold),
+                        ForeColor = isSelected ? UITheme.NavyDark : Color.White,
+                        BackColor = isSelected ? Color.White : UITheme.PrimaryBlue,
+                        Size = new Size(68, 18),
+                        Location = new Point(155, 16),
+                        TextAlign = ContentAlignment.MiddleCenter
+                    };
+                    btnStation.Controls.Add(lblBadge);
+                    lblBadge.Click += (s, e) => btnStation.PerformClick();
+                }
+
+                btnStation.Controls.Add(lblFare);
+                btnStation.Controls.Add(pbArrow);
+
+                pbPin.Click += (s, e) => btnStation.PerformClick();
+                lblName.Click += (s, e) => btnStation.PerformClick();
+                lblFare.Click += (s, e) => btnStation.PerformClick();
+                pbArrow.Click += (s, e) => btnStation.PerformClick();
 
                 btnStation.Click += (s, e) =>
                 {
@@ -942,28 +1027,35 @@ namespace SmartTicketing.UI
                 BorderStyle = BorderStyle.FixedSingle,
                 Cursor = Cursors.Hand
             };
-            var lblCardIcon = new Label { Text = "💳", Font = new Font("Segoe UI", 24), Location = new Point(15, 15), AutoSize = true };
+            var pbCardIcon = new PictureBox { Image = BootstrapIcons.CreditCard(32, UITheme.PrimaryBlue), Size = new Size(32, 32), Location = new Point(18, 18), SizeMode = PictureBoxSizeMode.CenterImage };
             var lblCardTitle = new Label { Text = "Credit / Debit card", Font = new Font("Segoe UI", 13, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(15, 65), AutoSize = true };
-            var lblCardDesc = new Label { Text = "Tap a card or mobile wallet, or insert your chip card.", Font = new Font("Segoe UI", 9.5f), ForeColor = UITheme.TextSecondary, Location = new Point(15, 95), Size = new Size(220, 40) };
+            var lblCardDesc = new Label { Text = "Tap a card or mobile wallet, or insert your chip card.", Font = new Font("Segoe UI", 9.5f), ForeColor = UITheme.TextSecondary, Location = new Point(15, 95), Size = new Size(240, 40) };
             var lblCardBadge = new Label { Text = "CONTACTLESS · CHIP", Font = new Font("Segoe UI", 8.5f, FontStyle.Bold), ForeColor = UITheme.PrimaryBlue, Location = new Point(15, 155), AutoSize = true };
-            pnlCardOpt.Controls.AddRange(new Control[] { lblCardIcon, lblCardTitle, lblCardDesc, lblCardBadge });
+            pnlCardOpt.Controls.AddRange(new Control[] { pbCardIcon, lblCardTitle, lblCardDesc, lblCardBadge });
+            pbCardIcon.Click += (s, e) => _controller.SetState(TVMState.ProcessingCardPayment);
+            lblCardTitle.Click += (s, e) => _controller.SetState(TVMState.ProcessingCardPayment);
+            lblCardDesc.Click += (s, e) => _controller.SetState(TVMState.ProcessingCardPayment);
             pnlCardOpt.Click += (s, e) => _controller.SetState(TVMState.ProcessingCardPayment);
             pnl.Controls.Add(pnlCardOpt);
 
             // Option 2: Banking / E-wallet QR
             var pnlQrOpt = new Panel
             {
-                Size = new Size(260, 200),
-                Location = new Point(310, 100),
+                Size = new Size(290, 200),
+                Location = new Point(340, 100),
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
                 Cursor = Cursors.Hand
             };
-            var lblQrIcon = new Label { Text = "📱", Font = new Font("Segoe UI", 24), Location = new Point(15, 15), AutoSize = true };
+            pnlCardOpt.Size = new Size(290, 200);
+            var pbQrIcon = new PictureBox { Image = BootstrapIcons.QrCode(32, UITheme.PrimaryBlue), Size = new Size(32, 32), Location = new Point(18, 18), SizeMode = PictureBoxSizeMode.CenterImage };
             var lblQrTitle = new Label { Text = "Banking / E-wallet QR", Font = new Font("Segoe UI", 13, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(15, 65), AutoSize = true };
             var lblQrDesc = new Label { Text = "Scan with your mobile banking or e-wallet app.", Font = new Font("Segoe UI", 9.5f), ForeColor = UITheme.TextSecondary, Location = new Point(15, 95), Size = new Size(220, 40) };
             var lblQrBadge = new Label { Text = "60 SECONDS TO PAY", Font = new Font("Segoe UI", 8.5f, FontStyle.Bold), ForeColor = UITheme.PrimaryBlue, Location = new Point(15, 155), AutoSize = true };
-            pnlQrOpt.Controls.AddRange(new Control[] { lblQrIcon, lblQrTitle, lblQrDesc, lblQrBadge });
+            pnlQrOpt.Controls.AddRange(new Control[] { pbQrIcon, lblQrTitle, lblQrDesc, lblQrBadge });
+            pbQrIcon.Click += (s, e) => _controller.SetState(TVMState.ProcessingQRPayment);
+            lblQrTitle.Click += (s, e) => _controller.SetState(TVMState.ProcessingQRPayment);
+            lblQrDesc.Click += (s, e) => _controller.SetState(TVMState.ProcessingQRPayment);
             pnlQrOpt.Click += (s, e) => _controller.SetState(TVMState.ProcessingQRPayment);
             pnl.Controls.Add(pnlQrOpt);
 
@@ -999,30 +1091,57 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(lblTitle);
             pnl.Controls.Add(lblSubtitle);
 
-            // Card Reader Simulation Box
-            var pnlReader = new Panel { Size = new Size(540, 260), Location = new Point(30, 100), BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle };
+            // Card Reader Simulation Box (Spacious 660px width to avoid any clipping)
+            var pnlReader = new Panel { Size = new Size(660, 245), Location = new Point(30, 95), BackColor = Color.White, BorderStyle = BorderStyle.FixedSingle };
 
             // Graphic POS Terminal
-            var pnlTerminal = new Panel { Size = new Size(130, 170), Location = new Point(25, 20), BackColor = UITheme.NavyDark };
+            var pnlTerminal = new Panel { Size = new Size(130, 185), Location = new Point(25, 20), BackColor = UITheme.NavyDark };
             var lblTermScreen = new Label { Text = $"TOTAL\n${_controller.TotalAmount:F2}", Font = new Font("Consolas", 11, FontStyle.Bold), ForeColor = UITheme.NavyDark, BackColor = Color.FromArgb(220, 230, 242), Size = new Size(110, 50), Location = new Point(10, 15), TextAlign = ContentAlignment.MiddleCenter };
-            var lblContactless = new Label { Text = "📶", Font = new Font("Segoe UI", 22), ForeColor = Color.White, Size = new Size(110, 40), Location = new Point(10, 75), TextAlign = ContentAlignment.MiddleCenter };
+            var lblContactless = new Label { Text = "📶", Font = new Font("Segoe UI", 22), ForeColor = Color.White, Size = new Size(110, 40), Location = new Point(10, 85), TextAlign = ContentAlignment.MiddleCenter };
             pnlTerminal.Controls.Add(lblTermScreen);
             pnlTerminal.Controls.Add(lblContactless);
             pnlReader.Controls.Add(pnlTerminal);
 
-            var lblTapText = new Label { Text = "Tap to pay", Font = new Font("Segoe UI", 13, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(180, 25), AutoSize = true };
-            var lblTapSub = new Label { Text = "Hold your contactless card or mobile wallet over the symbol.", Font = new Font("Segoe UI", 9.5f), ForeColor = UITheme.TextSecondary, Location = new Point(180, 52), Size = new Size(330, 25) };
-            var lblInsertText = new Label { Text = "Or insert your chip card", Font = new Font("Segoe UI", 13, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(180, 95), AutoSize = true };
-            var lblInsertSub = new Label { Text = "Leave it in the reader until prompted to remove.", Font = new Font("Segoe UI", 9.5f), ForeColor = UITheme.TextSecondary, Location = new Point(180, 122), Size = new Size(330, 25) };
+            var lblTapText = new Label { Text = "Tap to pay", Font = new Font("Segoe UI", 13, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(175, 20), AutoSize = true };
+            var lblTapSub = new Label { Text = "Hold your contactless card or mobile wallet over the symbol.", Font = new Font("Segoe UI", 9.5f), ForeColor = UITheme.TextSecondary, Location = new Point(175, 48), AutoSize = true };
+            var lblInsertText = new Label { Text = "Or insert your chip card", Font = new Font("Segoe UI", 13, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(175, 82), AutoSize = true };
+            var lblInsertSub = new Label { Text = "Leave it in the reader until prompted to remove.", Font = new Font("Segoe UI", 9.5f), ForeColor = UITheme.TextSecondary, Location = new Point(175, 110), AutoSize = true };
 
-            var btnTapSuccess = new Button { Text = "✔ Simulate Card Tap (Approved)", Font = new Font("Segoe UI", 10, FontStyle.Bold), Size = new Size(230, 38), Location = new Point(180, 160), BackColor = UITheme.PrimaryBlue, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+            var btnTapSuccess = new Button
+            {
+                Text = "  Simulate Card Tap (Approved)",
+                Image = BootstrapIcons.CheckCircleFill(18, Color.White),
+                ImageAlign = ContentAlignment.MiddleLeft,
+                TextAlign = ContentAlignment.MiddleCenter,
+                                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Size = new Size(245, 42),
+                Location = new Point(175, 155),
+                BackColor = UITheme.PrimaryBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
             btnTapSuccess.Click += async (s, e) =>
             {
                 await _controller.ProcessCardPaymentAsync(simulateDecline: false);
                 await SaveAndSyncTransaction();
             };
 
-            var btnTapDecline = new Button { Text = "✖ Simulate Card Decline", Font = new Font("Segoe UI", 9.5f), Size = new Size(180, 38), Location = new Point(420, 160), BackColor = Color.White, ForeColor = UITheme.DangerRed, FlatStyle = FlatStyle.Flat };
+            var btnTapDecline = new Button
+            {
+                Text = "  Simulate Card Decline",
+                Image = BootstrapIcons.XCircle(16, UITheme.DangerRed),
+                ImageAlign = ContentAlignment.MiddleLeft,
+                TextAlign = ContentAlignment.MiddleCenter,
+                                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                Size = new Size(215, 42),
+                Location = new Point(430, 155),
+                BackColor = Color.White,
+                ForeColor = UITheme.DangerRed,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnTapDecline.FlatAppearance.BorderColor = UITheme.DangerRed;
             btnTapDecline.Click += async (s, e) =>
             {
                 await _controller.ProcessCardPaymentAsync(simulateDecline: true);
@@ -1032,7 +1151,7 @@ namespace SmartTicketing.UI
             pnl.Controls.Add(pnlReader);
 
             // Privacy Security Notice
-            var pnlPriv = new Panel { Size = new Size(540, 50), Location = new Point(30, 380), BackColor = Color.FromArgb(238, 242, 255), BorderStyle = BorderStyle.FixedSingle };
+            var pnlPriv = new Panel { Size = new Size(660, 50), Location = new Point(30, 365), BackColor = Color.FromArgb(238, 242, 255), BorderStyle = BorderStyle.FixedSingle };
             var lblPriv = new Label { Text = "🔒  Your card details stay private. Never enter a PIN or CVV on this screen.", Font = new Font("Segoe UI", 9), ForeColor = UITheme.NavyDark, Location = new Point(15, 15), AutoSize = true };
             pnlPriv.Controls.Add(lblPriv);
             pnl.Controls.Add(pnlPriv);
@@ -1481,6 +1600,18 @@ namespace SmartTicketing.UI
 
         #region Helper Reusable UI Cards
 
+        private static Control CreateHeaderPill(string text, Bitmap icon)
+        {
+            var pnl = new Panel { AutoSize = true, BackColor = Color.Transparent, Margin = new Padding(16, 0, 0, 0), Cursor = Cursors.Hand };
+            var pb = new PictureBox { Image = icon, Size = new Size(15, 15), Location = new Point(0, 2), SizeMode = PictureBoxSizeMode.CenterImage };
+            var lbl = new Label { Text = text, Font = new Font("Segoe UI", 9, FontStyle.Regular), ForeColor = Color.White, Location = new Point(20, 0), AutoSize = true };
+            pnl.Controls.Add(pb);
+            pnl.Controls.Add(lbl);
+            pb.Click += (s, e) => pnl.Focus();
+            lbl.Click += (s, e) => pnl.Focus();
+            return pnl;
+        }
+
         private Panel CreateRouteMapCard(int x, int y, int w, int h, string selectedStationName)
         {
             var pnl = new Panel
@@ -1611,8 +1742,15 @@ namespace SmartTicketing.UI
             var lblBadge = new Label { Text = "01", Font = new Font("Segoe UI", 8.5f, FontStyle.Bold), ForeColor = Color.White, BackColor = UITheme.LineBlue, Size = new Size(24, 18), Location = new Point(20, 52), TextAlign = ContentAlignment.MiddleCenter };
             var lblLine = new Label { Text = "Riverside line", Font = new Font("Segoe UI", 9.5f, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(48, 52), AutoSize = true };
 
-            var lblRoute = new Label { Text = $"📍 Central\n⬇\n📍 {dest.StationName}", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(20, 85), Size = new Size(200, 60) };
-            var lblStops = new Label { Text = "5 stops · About 14 minutes", Font = new Font("Segoe UI", 8.5f), ForeColor = UITheme.TextSecondary, Location = new Point(20, 150), AutoSize = true };
+            var pbOrigin = new PictureBox { Image = BootstrapIcons.GeoAltFill(14, UITheme.LineBlue), Size = new Size(14, 14), Location = new Point(20, 85), SizeMode = PictureBoxSizeMode.CenterImage };
+            var lblOrigin = new Label { Text = "Central", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(38, 82), AutoSize = true };
+
+            var pbArrowDown = new PictureBox { Image = BootstrapIcons.ArrowRight(12, UITheme.TextMuted), Size = new Size(12, 12), Location = new Point(21, 107), SizeMode = PictureBoxSizeMode.CenterImage };
+            // Rotate arrow or draw small connector
+            var lblStops = new Label { Text = "5 stops · About 14 minutes", Font = new Font("Segoe UI", 8.5f), ForeColor = UITheme.TextSecondary, Location = new Point(38, 105), AutoSize = true };
+
+            var pbDest = new PictureBox { Image = BootstrapIcons.GeoAltFill(14, UITheme.NavyDark), Size = new Size(14, 14), Location = new Point(20, 128), SizeMode = PictureBoxSizeMode.CenterImage };
+            var lblDestSt = new Label { Text = dest.StationName, Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(38, 125), AutoSize = true };
 
             var lineSep1 = new Panel { Size = new Size(w - 40, 1), Location = new Point(20, 180), BackColor = UITheme.BorderColor };
 
@@ -1625,7 +1763,7 @@ namespace SmartTicketing.UI
             var lblTotalHead = new Label { Text = "Total to pay", Font = new Font("Segoe UI", 9.5f), ForeColor = UITheme.TextSecondary, Location = new Point(20, 265), AutoSize = true };
             var lblTotalVal = new Label { Text = $"${_controller.TotalAmount:F2}", Font = new Font("Segoe UI", 26, FontStyle.Bold), ForeColor = UITheme.NavyDark, Location = new Point(18, 290), AutoSize = true };
 
-            pnl.Controls.AddRange(new Control[] { lblHead, lblBadge, lblLine, lblRoute, lblStops, lineSep1, lblQtyRow, lblUnitPrice, lblSubTotal, lineSep2, lblTotalHead, lblTotalVal });
+            pnl.Controls.AddRange(new Control[] { lblHead, lblBadge, lblLine, pbOrigin, lblOrigin, pbArrowDown, lblStops, pbDest, lblDestSt, lineSep1, lblQtyRow, lblUnitPrice, lblSubTotal, lineSep2, lblTotalHead, lblTotalVal });
             return pnl;
         }
 
@@ -1659,8 +1797,11 @@ namespace SmartTicketing.UI
         {
             var btn = new Button
             {
-                Text = "←  Back",
-                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Text = "  Back",
+                Image = BootstrapIcons.ArrowLeft(16, UITheme.NavyDark),
+                ImageAlign = ContentAlignment.MiddleLeft,
+                TextAlign = ContentAlignment.MiddleCenter,
+                                Font = new Font("Segoe UI", 10, FontStyle.Bold),
                 Size = new Size(110, 44),
                 BackColor = Color.White,
                 ForeColor = UITheme.NavyDark,
@@ -1676,9 +1817,12 @@ namespace SmartTicketing.UI
         {
             var btn = new Button
             {
-                Text = "✕  Cancel",
-                Font = new Font("Segoe UI", 10, FontStyle.Regular),
-                Size = new Size(100, 34),
+                Text = "  Cancel",
+                Image = BootstrapIcons.XCircle(15, UITheme.DangerRed),
+                ImageAlign = ContentAlignment.MiddleLeft,
+                TextAlign = ContentAlignment.MiddleCenter,
+                                Font = new Font("Segoe UI", 10, FontStyle.Regular),
+                Size = new Size(110, 44),
                 BackColor = Color.Transparent,
                 ForeColor = UITheme.DangerRed,
                 FlatStyle = FlatStyle.Flat,

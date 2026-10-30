@@ -84,6 +84,10 @@ namespace SmartTicketing.UI
             form.Invoke(new Action(() => ctrl.SetState(TVMState.SelectingPayment)));
             CompositeCapture("screenshot_s04_payment_methods.png");
 
+            // S05 Card Payment
+            form.Invoke(new Action(() => ctrl.SetState(TVMState.ProcessingCardPayment)));
+            CompositeCapture("screenshot_s05_card_payment.png");
+
             // S06 QR Payment
             form.Invoke(new Action(() => ctrl.SetState(TVMState.ProcessingQRPayment)));
             CompositeCapture("screenshot_s06_qr_payment.png");
