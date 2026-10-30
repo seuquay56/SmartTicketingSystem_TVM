@@ -115,28 +115,52 @@ namespace SmartTicketing.UI
             this.BackColor = UITheme.LightBg;
             this.Font = new Font("Segoe UI", 10, FontStyle.Regular);
 
-            // 1. Bottom Simulation Bar (Dock: Bottom)
-            _pnlBottomSimBar = CreateBottomSimulationBar();
-            this.Controls.Add(_pnlBottomSimBar);
+            // 1. Header Bar (60px)
+            _pnlHeader = CreateHeaderPanel();
+            _pnlHeader.Dock = DockStyle.Fill;
+            _pnlHeader.Margin = new Padding(0);
 
-            // 2. Content Panel (Dock: Fill)
+            // 2. Step Progress Bar (44px)
+            _pnlStepBar = CreateStepBarPanel();
+            _pnlStepBar.Dock = DockStyle.Fill;
+            _pnlStepBar.Margin = new Padding(0);
+
+            // 3. Content Panel (Fills remaining height)
             _pnlContent = new Panel
             {
                 Dock = DockStyle.Fill,
                 BackColor = UITheme.LightBg,
-                Padding = new Padding(0)
+                Padding = new Padding(0),
+                Margin = new Padding(0)
             };
-            this.Controls.Add(_pnlContent);
 
-            // 3. Step Progress Bar (Dock: Top)
-            _pnlStepBar = CreateStepBarPanel();
-            this.Controls.Add(_pnlStepBar);
+            // 4. Bottom Simulation Bar (48px)
+            _pnlBottomSimBar = CreateBottomSimulationBar();
+            _pnlBottomSimBar.Dock = DockStyle.Fill;
+            _pnlBottomSimBar.Margin = new Padding(0);
 
-            // 4. Header Bar (Dock: Top)
-            _pnlHeader = CreateHeaderPanel();
-            this.Controls.Add(_pnlHeader);
+            // Root layout: TableLayoutPanel strictly guarantees zero overlapping
+            var rootLayout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                RowCount = 4,
+                ColumnCount = 1,
+                Padding = new Padding(0),
+                Margin = new Padding(0),
+                BackColor = UITheme.LightBg
+            };
+            rootLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            rootLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 60f));  // Row 0: Header (60px)
+            rootLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 44f));  // Row 1: StepBar (44px)
+            rootLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));  // Row 2: Content (fills middle)
+            rootLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48f));  // Row 3: BottomSimBar (48px)
 
-            _pnlContent.SendToBack();
+            rootLayout.Controls.Add(_pnlHeader, 0, 0);
+            rootLayout.Controls.Add(_pnlStepBar, 0, 1);
+            rootLayout.Controls.Add(_pnlContent, 0, 2);
+            rootLayout.Controls.Add(_pnlBottomSimBar, 0, 3);
+
+            this.Controls.Add(rootLayout);
 
             // Timer for QR countdown in UI
             _qrTimer = new System.Windows.Forms.Timer { Interval = 1000 };
