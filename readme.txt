@@ -5,7 +5,7 @@ Software Engineering Lab - Group Assignment 1
 https://github.com/seuquay56/SmartTicketingSystem_TVM.git
 
 2. Figma UI/UX Design Link:
-[Link Figma]
+https://www.figma.com/design/LbKhf6mQOvEtakarW24O3d/Vending-Machine-UI--Community-?node-id=2004-20014&t=UQCVGVfx2zvgESvH-0
 
 3. Database Script & Setup Instructions:
 - Database Engine: MSSQL Server
