@@ -1,7 +1,5 @@
-================================================================================
 SMART TICKETING SYSTEM - TICKET VENDOR MACHINE (TVM)
 Software Engineering Lab - Group Assignment 1 | Group 14
-================================================================================
 
 1. GitHub Repository Link:
 https://github.com/seuquay56/SmartTicketingSystem_TVM.git
@@ -41,4 +39,3 @@ https://www.figma.com/design/LbKhf6mQOvEtakarW24O3d/Vending-Machine-UI--Communit
 2. 524H0069 - Vo Nguyen Phuc Thinh: 40%
 3. 524H0052 - Nguyen Nhat Huy: 30%
 Total: 100%
-================================================================================
